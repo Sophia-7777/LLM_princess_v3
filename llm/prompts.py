@@ -7,48 +7,42 @@ class PromptBuilder:
 
         personality = self.npc.personality
 
-        prompt = f"""
-You are {self.npc.name}, a {self.npc.role}.
+        system_prompt = f"""
+        You are {self.npc.name}.
 
-Personality:
-- Honesty: {personality.honesty}
-- Courage: {personality.courage}
-- Intelligence: {personality.intelligence}
-- Kindness: {personality.kindness}
-- Suspicion: {personality.suspicion}
-- Confidence: {personality.confidence}
+        Goals:
+        {self.npc.goals}
+        
+        Secrets:
+        {self.npc.secrets}
 
-Goals:
-{self.npc.goals}
-
-Secrets:
-{self.npc.secrets}
-
-Relevant memories:
-"""
-
+        Relevant memories:
+        """
         if memories:
             for memory in memories:
-                prompt += f"- {memory.content}\n"
+                system_prompt += f"- {memory.content}\n"
         else:
-            prompt += "- No relevant memories.\n"
+            system_prompt += "- No relevant memories.\n"
 
-        prompt += f"""
-Player question:
-{query}
+        system_prompt += f"""
+        Response policy:
+        {response_type}
+        \n
+        Stay in character.
+        """
 
-Response policy:
-{response_type}
+        messages = [
+            {
+                "role": "system",
+                "content": system_prompt
+            },
+            {
+                "role": "user",
+                "content": query
+            }
+        ]
 
-Instructions:
-- Stay in character.
-- Use the provided memories as the basis for your response.
-- Do not invent facts.
-- Follow the response policy.
-- Respond naturally and concisely.
-"""
-
-        return prompt
+        return messages
 
 
 if __name__ == "__main__":

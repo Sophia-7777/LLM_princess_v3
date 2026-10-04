@@ -34,87 +34,260 @@ class Game:
         )
         print("response_type:", response_type)
         # 3. Build the prompt
-        prompt = self.prompt_builder.build(
+        retrieved_memory_objects = [
+            memory for memory, score in relevant_memories
+        ]
+        # print("retrieved_memory_objects: ", retrieved_memory_objects)
+        messages = self.prompt_builder.build(
             query,
-            memories,
+            retrieved_memory_objects,
             response_type
         )
-        print("prompt:", prompt)
+        # print("messages:", messages)
         print("qqqqqq")
         # 4. Generate the response
-        response = self.llm_client.generate(prompt)
+        response = self.llm_client.generate(messages)
 
         return response
 
 
 if __name__ == "__main__":
-    personality = Personality(
-        honesty=0.5,
-        courage=0.5,
-        intelligence=0.7,
-        kindness=0.6,
-        suspicion=0.5,
-        confidence=0.5
+
+    # ==============================
+    # Sophia
+    # ==============================
+
+    sophia_personality = Personality(
+        honesty=0.8,
+        courage=0.7,
+        intelligence=0.9,
+        kindness=0.5,
+        suspicion=0.8,
+        confidence=0.8
     )
 
-    npc = NPC(
-        npc_id="npc001",
-        name="Emma",
-        role="Maid",
-        personality=personality
+    sophia = NPC(
+        npc_id="sophia_001",
+        name="Sophia",
+        role="refined young woman",
+        personality=sophia_personality
     )
 
-    npc.add_secret(
-        # "I secretly took Barbie's letter."
-        "I saw Barbie walking toward the rose garden."
-    )
+    sophia.add_goal("Maintain control of the situation")
+    sophia.add_goal("Protect her reputation")
 
-    memory1 = Memory(
-        id="m1",
-        npc_id="npc001",
-        # content="I saw Barbie walking toward the rose garden.",
-        content="I took Barbie's letter.",
-        event_id=None,
-        timestamp=100,
-        importance=0.8
-    )
+    sophia.add_secret("Sophia does not easily trust strangers.")
 
-    memory2 = Memory(
-        id="m2",
-        npc_id="npc001",
-        content="Barbie dropped a letter near the rose garden.",
-        event_id=None,
-        timestamp=110,
-        importance=0.9
-    )
-
-    memory3 = Memory(
-        id="m3",
-        npc_id="npc001",
-        content="I picked up something from the ground.",
-        event_id=None,
-        timestamp=115,
-        importance=0.7
-    )
-
-    memories = [
-        memory1,
-        memory2,
-        memory3
+    sophia_memories = [
+        Memory(
+            id="sophia_memory_001",
+            npc_id="sophia_001",
+            content="The player arrived in the village yesterday.",
+            timestamp=100,
+            importance=0.7,
+            event_id="sophia_event_001"
+        ),
+        Memory(
+            id="sophia_memory_002",
+            npc_id="sophia_001",
+            content="Sophia believes the player may be hiding something.",
+            timestamp=200,
+            importance=0.9,
+            event_id="sophia_event_002"
+        ),
+        Memory(
+            id="sophia_memory_003",
+            npc_id="sophia_001",
+            content="Sophia promised to investigate the player's intentions.",
+            timestamp=300,
+            importance=0.8,
+            event_id="sophia_event_003"
+        )
     ]
 
-    game = Game(
-        npc=npc,
-        memories=memories
+    # ==============================
+    # Barney
+    # ==============================
+
+    barney_personality = Personality(
+        honesty=0.8,
+        courage=0.9,
+        intelligence=0.5,
+        kindness=0.2,
+        suspicion=0.7,
+        confidence=0.9
     )
-    ask = "Where did you see Barbie?"
 
-    print("\nPlayer:")
-    print(ask)
+    barney = NPC(
+        npc_id="barney_001",
+        name="Barney",
+        role="rough village man",
+        personality=barney_personality
+    )
 
-    result = game.ask_npc(ask)
+    barney.add_goal("Get what he wants quickly")
+    barney.add_goal("Avoid looking weak")
 
-    print("\nEmma:")
-    print(result)
+    barney.add_secret("Barney is afraid of being humiliated.")
 
-    print("\nGame loaded successfully.")
+    barney_memories = [
+        Memory(
+            id="barney_memory_001",
+            npc_id="barney_001",
+            content="The player interrupted Barney while he was working.",
+            timestamp=100,
+            importance=0.6,
+            event_id="barney_event_001"
+        ),
+        Memory(
+            id="barney_memory_002",
+            npc_id="barney_001",
+            content="Barney does not trust the player's intentions.",
+            timestamp=200,
+            importance=0.8,
+            event_id="barney_event_002"
+        ),
+        Memory(
+            id="barney_memory_003",
+            npc_id="barney_001",
+            content="Barney warned the player not to cause trouble in the village.",
+            timestamp=300,
+            importance=0.9,
+            event_id="barney_event_003"
+        )
+    ]
+
+    # ==============================
+    # Lucas
+    # ==============================
+
+    lucas_personality = Personality(
+        honesty=0.7,
+        courage=0.3,
+        intelligence=0.8,
+        kindness=0.6,
+        suspicion=0.7,
+        confidence=0.3
+    )
+
+    lucas = NPC(
+        npc_id="lucas_001",
+        name="Lucas",
+        role="timid young man",
+        personality=lucas_personality
+    )
+
+    lucas.add_goal("Avoid unnecessary conflict")
+    lucas.add_goal("Protect his secrets")
+
+    lucas.add_secret("Lucas is afraid of being abandoned.")
+    lucas.add_secret("Lucas knows something important about the village.")
+
+    lucas_memories = [
+        Memory(
+            id="lucas_memory_001",
+            npc_id="lucas_001",
+            content="The player helped Lucas yesterday.",
+            timestamp=100,
+            importance=0.9,
+            event_id="lucas_event_001"
+        ),
+        Memory(
+            id="lucas_memory_002",
+            npc_id="lucas_001",
+            content="Lucas does not completely trust the player yet.",
+            timestamp=200,
+            importance=0.7,
+            event_id="lucas_event_002"
+        ),
+        Memory(
+            id="lucas_memory_003",
+            npc_id="lucas_001",
+            content="Lucas promised not to reveal the location of the hidden village.",
+            timestamp=300,
+            importance=1.0,
+            event_id="lucas_event_003"
+        )
+    ]
+
+    # ==============================
+    # Jack
+    # ==============================
+
+    jack_personality = Personality(
+        honesty=0.8,
+        courage=0.8,
+        intelligence=0.6,
+        kindness=0.7,
+        suspicion=0.3,
+        confidence=0.8
+    )
+
+    jack = NPC(
+        npc_id="jack_001",
+        name="Jack",
+        role="energetic young man",
+        personality=jack_personality
+    )
+
+    jack.add_goal("Have fun")
+    jack.add_goal("Find out what is happening")
+
+    jack.add_secret("Jack sometimes acts before thinking.")
+
+    jack_memories = [
+        Memory(
+            id="jack_memory_001",
+            npc_id="jack_001",
+            content="Jack met the player near the village gate.",
+            timestamp=100,
+            importance=0.6,
+            event_id="jack_event_001"
+        ),
+        Memory(
+            id="jack_memory_002",
+            npc_id="jack_001",
+            content="Jack heard a strange rumor about the forest.",
+            timestamp=200,
+            importance=0.8,
+            event_id="jack_event_002"
+        ),
+        Memory(
+            id="jack_memory_003",
+            npc_id="jack_001",
+            content="Jack wants to investigate the strange rumor with the player.",
+            timestamp=300,
+            importance=0.9,
+            event_id="jack_event_003"
+        )
+    ]
+
+    # ==============================
+    # Create games
+    # ==============================
+
+    npcs = [
+        ("Sophia", sophia, sophia_memories),
+        ("Barney", barney, barney_memories),
+        ("Lucas", lucas, lucas_memories),
+        ("Jack", jack, jack_memories)
+    ]
+
+    query = "Why do you look so nervous?"
+
+    for name, npc, memories in npcs:
+
+        print("\n")
+        print("=" * 60)
+        print(name)
+        print("=" * 60)
+
+        game = Game(npc, memories)
+
+        print("\nPlayer:")
+        print(query)
+
+        response = game.ask_npc(query)
+
+        print("\nNPC:")
+        print(response)

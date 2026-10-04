@@ -8,21 +8,17 @@ class NPC:
         self.name = name
         self.role = role
         self.personality = personality
-        self.goals=None
+        self.goals = []
+        self.secrets = []
+        self.memories = []
     
     def add_goal(self, goal):
-        if not hasattr(self, 'goals'):
-            self.goals = []
         self.goals.append(goal)
 
     def add_secret(self, secret):
-        if not hasattr(self, 'secrets'):
-            self.secrets = []
         self.secrets.append(secret)
 
     def add_memory(self, memory):
-        if not hasattr(self, 'memories'):
-            self.memories = []
         self.memories.append(memory)
 
 if __name__ == "__main__":
