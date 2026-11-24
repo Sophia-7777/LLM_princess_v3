@@ -136,14 +136,3 @@ Comparing the Base Model and LoRA outputs against original character dialogues.
 > Because I have provided sufficient reason for your confidence, which is hardly a remarkable accomplishment.
 
 ---
-
-## 🔭 Future Plans
-
-- Improve long-term NPC memory.
-- Explore more dynamic personality-driven behaviors.
-- Improve consistency across multi-turn conversations.
-- Integrate NPCs more deeply with world events and state changes.
-
----
-
-*An ongoing experiment in making virtual characters feel less like chatbots and more like individuals.*
